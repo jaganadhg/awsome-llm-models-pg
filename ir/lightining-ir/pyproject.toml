@@ -1,0 +1,35 @@
+[project]
+name = "lightningir-demo"
+version = "0.1.0"
+description = "A demo of Lightining IR for Encoder models"
+authors = [
+    {name = "Jagan",email = "jaganadhg@outlook.com"}
+]
+license = {text = "Apache 2.0"}
+readme = "README.md"
+requires-python = ">=3.11,<4.0" #">=3.11"
+dependencies = [
+    "ipython (>=8.31.0,<9.0.0)",
+    "ipykernel (>=6.29.5,<7.0.0)",
+    "torch (==2.0.1+cu118)",
+    "lightning-ir (>=0.0.2,<0.0.3)",
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[[tool.poetry.source]]
+name = "PyPI"
+priority = "primary"
+
+
+[[tool.poetry.source]]
+name = "torch"
+url = "https://download.pytorch.org/whl/cu118"
+priority = "supplemental"
+
+
+[tool.poetry.dependencies]
+torch = {source = "torch"}
