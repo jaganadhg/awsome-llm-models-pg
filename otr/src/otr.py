@@ -60,9 +60,20 @@ def get_relevance_for_items(
     results = []
     for item in items:
         prompt = (
-            f"Given the query: \"{item['query']}\" and the document: "
-            f"\"{item['docuement']}\", respond with a JSON object "
-            f'{{"relevance": <0 or 1>}} where 1 means relevant and 0 not relevant.'
+            f"""
+            Task: Evaluate Relevance of Search Result 
+            Definition of On-Topic Rate: The on-topic rate measures the percentage of search results that are relevant to the intended topic. A document is considered "on-topic" if it is primarily about the query or strongly relevant to the query. 
+            The question is \"{item['query']}\"
+            Instructions:
+            1. Focus on Semantic Matching: Do not rely solely on keyword matching. Carefully consider the user's intent behind the query and whether the document truly addresses that intent.
+            2. Thoroughly Analyze Document Content: Take into account all provided information about the document, including the title, body, and any additional context. 
+            3. Provide Detailed Reasoning: Explain your reasoning for the relevance decision, highlighting specific aspects of the document that support your judgment.
+            Query: \"{item['query']}\"
+            Document: \"{item['docuement']}\"
+            Response Format:
+            respond with a JSON object 
+            {{"relevance": <0 or 1>}} where 1 means relevant and 0 not relevant.
+            """
         )
         resp = openai.ChatCompletion.create(
             model=model,
