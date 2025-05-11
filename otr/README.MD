@@ -24,7 +24,7 @@ The code is based on the paper Semantic Search Evaluation https://arxiv.org/abs/
     ```
    Create a .env in src/ with your OpenAI key:
 
-    ```md
+    ```bash
     OPENAI_API_KEY=sk-…
     ```
 
@@ -34,17 +34,27 @@ The code is based on the paper Semantic Search Evaluation https://arxiv.org/abs/
 
     Python example
 
-    ```
+    ```python
+    from loguru import logger
     from otr import on_topic_rate_at_k, get_relevance_for_items
 
-    flags = [1,0,1,1,0]
-    print(on_topic_rate_at_k(flags, 3))  # 0.666…
-
     items = [
-    {"qid":"1","query":"Capitals of France?","docuement":"Paris is…"}
+        {"qid": "1", "query": "What is the capital of France?", "docuement": "The capital of France is Paris."},
+        {"qid": "2", "query": "What is the capital of Germany?", "docuement": "Berlin is the capital of Germany."},
+        {"qid": "3", "query": "What is the capital of Italy?", "docuement": "Rome is the capital of Italy."},
+        {"qid": "4", "query": "What is the capital of Spain?", "docuement": "Madrid is the capital of Spain."},
+        {"qid": "5", "query": "What is the capital of Portugal?", "docuement": "Lisbon is the capital of Portugal."},
+        {"qid": "6", "query": "What is the capital of Netherlands?", "docuement": "Amsterdam is the capital of Netherlands."},
+        {"qid": "7", "query": "What is the capital of Belgium?", "docuement": "Brussels is the capital of Belgium."},
+        {"qid": "8", "query": "What is the capital of Switzerland?", "docuement": "Bern is the capital of Switzerland."},
+        {"qid": "9", "query": "What is the capital of Austria?", "docuement": "Vienna is the capital of Austria."},
+        {"qid": "10", "query": "What is the capital of Greece?", "docuement": "Athens is the capital of Greece."}
     ]
-    results = get_relevance_for_items(items, model="o4-mini")
-    print(results)
+    results = get_relevance_for_items(items)
+    for result in results:
+        logger.info(f"Query: {result['query']}, Document: {result['docuement']}, Relevance: {result['relevance']}")
+    topic_r = on_topic_rate_at_k([item['relevance'] for item in results], 5)
+    logger.info(f"On Topic Rate at K=5: {topic_r}")
     ```
 
 ### Citation
