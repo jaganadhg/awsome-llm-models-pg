@@ -51,14 +51,16 @@ The code is based on the paper Semantic Search Evaluation https://arxiv.org/abs/
 If you use OTR in your research or projects, please cite:
 
     APA
+
     Gopinadhan, J. (2025). OTR: On-The-Topic Rate [Computer software]. GitHub. https://github.com/jaganadhg/awsome-llm-models-pg/tree/main/otr 
 
     BibTex
-    ```tex
+
+    ```
     @misc{gopinadhan2025otr,
-  author       = {Gopinadhan, Jaganadh},
-  title        = {{OTR: On\,-The\,-Topic Rate}},
-  year         = {2025},
-  howpublished = {\url{https://github.com/jaganadhg/awsome-llm-models-pg/tree/main/otr }},
-}
+    author       = {Gopinadhan, Jaganadh},
+    title        = {{OTR: On\,-The\,-Topic Rate}},
+    year         = {2025},
+    howpublished = {\url{https://github.com/jaganadhg/awsome-llm-models-pg/tree/main/otr }},
+    }
     ```
