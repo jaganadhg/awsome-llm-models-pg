@@ -1,14 +1,16 @@
 #!/usr/bin/env python
-
+import json
 from dotenv import load_dotenv
 import os
 import openai
+from loguru import logger
 
 
 load_dotenv()
 
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+#openai.api_key = os.getenv("OPENAI_API_KEY")
+client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
 def on_topic_rate(rel_count: int, total_docs: int) -> float:
@@ -50,7 +52,7 @@ def on_topic_rate_at_k(relevance_flags: list[int], k: int) -> float:
 
 def get_relevance_for_items(
     items: list[dict],
-    model: str = "gpt-4"
+    model: str = "o4-mini"
 ) -> list[dict]:
     """
     For each item in items (with keys "qid", "query", "docuement"),
@@ -75,10 +77,11 @@ def get_relevance_for_items(
             {{"relevance": <0 or 1>}} where 1 means relevant and 0 not relevant.
             """
         )
-        resp = openai.ChatCompletion.create(
+        logger.debug(f"Prompt: {prompt}")
+        resp = client.chat.completions.create(
             model=model,
             messages=[{"role": "user", "content": prompt}],
-            temperature=0
+            temperature=1
         )
         content = resp.choices[0].message.content.strip()
         try:
@@ -88,3 +91,24 @@ def get_relevance_for_items(
             relevance = 0
         results.append({**item, "relevance": relevance})
     return results
+
+
+if __name__ == "__main__":
+    # Example usage
+    items = [
+        {"qid": "1", "query": "What is the capital of France?", "docuement": "The capital of France is Paris."},
+        {"qid": "2", "query": "What is the capital of Germany?", "docuement": "Berlin is the capital of Germany."},
+        {"qid": "3", "query": "What is the capital of Italy?", "docuement": "Rome is the capital of Italy."},
+        {"qid": "4", "query": "What is the capital of Spain?", "docuement": "Madrid is the capital of Spain."},
+        {"qid": "5", "query": "What is the capital of Portugal?", "docuement": "Lisbon is the capital of Portugal."},
+        {"qid": "6", "query": "What is the capital of Netherlands?", "docuement": "Amsterdam is the capital of Netherlands."},
+        {"qid": "7", "query": "What is the capital of Belgium?", "docuement": "Brussels is the capital of Belgium."},
+        {"qid": "8", "query": "What is the capital of Switzerland?", "docuement": "Bern is the capital of Switzerland."},
+        {"qid": "9", "query": "What is the capital of Austria?", "docuement": "Vienna is the capital of Austria."},
+        {"qid": "10", "query": "What is the capital of Greece?", "docuement": "Athens is the capital of Greece."}
+    ]
+    results = get_relevance_for_items(items)
+    for result in results:
+        logger.info(f"Query: {result['query']}, Document: {result['docuement']}, Relevance: {result['relevance']}")
+    topic_r = on_topic_rate_at_k([item['relevance'] for item in results], 5)
+    logger.info(f"On Topic Rate at K=5: {topic_r}")
